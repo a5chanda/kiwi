@@ -9,6 +9,8 @@ networks:
   kiwiNet:
 
 services:
+
+
   ca.org1.kiwi.com:
     image: hyperledger/fabric-ca
     environment:
@@ -47,6 +49,7 @@ services:
     networks:
       - kiwiNet
 
+############################## ORDERER ######################################
   orderer.kiwi.com:
     extends:
       file:   base/docker-compose-base.yaml
@@ -55,45 +58,101 @@ services:
     networks:
       - kiwiNet
 
+
+############################## PEERS ######################################
+
+
+## Peer 0 -  Org 1
+
+  couchdb0:
+      container_name: couchDBOrg1Peer0
+      image: hyperledger/fabric-couchdb
+      # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+      # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+      environment:
+        - COUCHDB_USER=kiwi
+        - COUCHDB_PASSWORD=abc123
+      # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+      # for kiwi map it to utilize Fauxton User Interface in dev environments.
+      ports:
+        - "5984:5984"
+      networks:
+        - kiwiNet
+
   peer0.org1.kiwi.com:
     container_name: peer0.org1.kiwi.com
     extends:
       file:  base/docker-compose-base.yaml
       service: peer0.org1.kiwi.com
+    environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchDBOrg1Peer0:5984
+      # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+      # provide the credentials for ledger to connect to CouchDB.  The username and password must
+      # match the username and password set for the associated CouchDB.
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=kiwi
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=abc123  
     depends_on:
-      - orderer.kiwi.com  
+      - orderer.kiwi.com
+      - couchdb0  
     networks:
       - kiwiNet
+
+  ## Peer 1 -  Org 1
+  couchdb1:
+      container_name: couchDBPeer1Org1
+      image: hyperledger/fabric-couchdb
+      # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
+      # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
+      environment:
+        - COUCHDB_USER=kiwi
+        - COUCHDB_PASSWORD=abc123
+      # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
+      # for kiwi map it to utilize Fauxton User Interface in dev environments.
+      ports:
+        - "6984:5984"
+      networks:
+        - kiwiNet
 
   peer1.org1.kiwi.com:
     container_name: peer1.org1.kiwi.com
     extends:
       file:  base/docker-compose-base.yaml
       service: peer1.org1.kiwi.com
+    environment:
+        - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+        - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchDBPeer1Org1:5984
+        # The CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME and CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+        # provide the credentials for ledger to connect to CouchDB.  The username and password must
+        # match the username and password set for the associated CouchDB.
+        - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=kiwi
+        - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=abc123
     depends_on:
       - orderer.kiwi.com
+      - couchdb1
     networks:
       - kiwiNet
 
-  peer0.org2.kiwi.com:
-    container_name: peer0.org2.kiwi.com
-    extends:
-      file:  base/docker-compose-base.yaml
-      service: peer0.org2.kiwi.com
-    depends_on:
-      - orderer.kiwi.com
-    networks:
-      - kiwiNet
+# ## Peer 1 -  Org 0
+#   peer0.org2.kiwi.com:
+#     container_name: peer0.org2.kiwi.com
+#     extends:
+#       file:  base/docker-compose-base.yaml
+#       service: peer0.org2.kiwi.com
+#     depends_on:
+#       - orderer.kiwi.com
+#     networks:
+#       - kiwiNet
 
-  peer1.org2.kiwi.com:
-    container_name: peer1.org2.kiwi.com
-    extends:
-      file:  base/docker-compose-base.yaml
-      service: peer1.org2.kiwi.com
-    depends_on:
-      - orderer.kiwi.com
-    networks:
-      - kiwiNet
+#   peer1.org2.kiwi.com:
+#     container_name: peer1.org2.kiwi.com
+#     extends:
+#       file:  base/docker-compose-base.yaml
+#       service: peer1.org2.kiwi.com
+#     depends_on:
+#       - orderer.kiwi.com
+#     networks:
+#       - kiwiNet
 
   cli:
     container_name: cli
@@ -124,7 +183,7 @@ services:
       - orderer.kiwi.com
       - peer0.org1.kiwi.com
       - peer1.org1.kiwi.com
-      - peer0.org2.kiwi.com
-      - peer1.org2.kiwi.com
+      # - peer0.org2.kiwi.com
+      # - peer1.org2.kiwi.com
     networks:
       - kiwiNet
