@@ -1,0 +1,110 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+version: '2'
+
+services:
+
+  orderer.kiwi.com:
+    container_name: orderer.kiwi.com
+    image: hyperledger/fabric-orderer:$IMAGE_TAG
+    environment:
+      #- ORDERER_GENERAL_LOGLEVEL=INFO
+      - ORDERER_GENERAL_LOGLEVEL=DEBUG
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/etc/hyperledger/configtx/genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/etc/hyperledger/fabric/orderer/msp
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=true
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/fabric/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/fabric/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/fabric/orderer/tls/ca.crt, /etc/hyperledger/fabric/peerOrg1/tls/ca.crt, /etc/hyperledger/fabric/peerOrg2/tls/ca.crt]
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderers
+    command: orderer
+    volumes:
+    - ../channel/channel-artifacts/:/etc/hyperledger/configtx
+    - ../channel/crypto-config/ordererOrganizations/kiwi.com/orderers/orderer.kiwi.com/:/etc/hyperledger/fabric/orderer
+    - ../channel/crypto-config/peerOrganizations/org1.kiwi.com/peers/peer0.org1.kiwi.com/:/etc/hyperledger/fabric/peerOrg1
+    - ../channel/crypto-config/peerOrganizations/org2.kiwi.com/peers/peer0.org2.kiwi.com/:/etc/hyperledger/fabric/peerOrg2
+    #- orderer.kiwi.com:/var/hyperledger/production/orderer
+    ports:
+      - 7050:7050
+
+  peer0.org1.kiwi.com:
+    container_name: peer0.org1.kiwi.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.org1.kiwi.com
+      - CORE_PEER_ADDRESS=peer0.org1.kiwi.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../channel/crypto-config/peerOrganizations/org1.kiwi.com/peers/peer0.org1.kiwi.com/:/etc/hyperledger/fabric/peer
+        #- peer0.org1.kiwi.com:/var/hyperledger/production
+    ports:
+      - 7051:7051
+      - 7053:7053
+
+  peer1.org1.kiwi.com:
+    container_name: peer1.org1.kiwi.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.org1.kiwi.com
+      - CORE_PEER_ADDRESS=peer1.org1.kiwi.com:7051
+      # - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org1.kiwi.com:7051
+      # - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.kiwi.com:7051
+      - CORE_PEER_LOCALMSPID=Org1MSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../channel/crypto-config/peerOrganizations/org1.kiwi.com/peers/peer1.org1.kiwi.com/:/etc/hyperledger/fabric/peer
+       # - peer1.org1.kiwi.com:/var/hyperledger/production
+
+    ports:
+      - 8051:7051
+      - 8053:7053
+
+  peer0.org2.kiwi.com:
+    container_name: peer0.org2.kiwi.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer0.org2.kiwi.com
+      - CORE_PEER_ADDRESS=peer0.org2.kiwi.com:7051
+      # - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org2.kiwi.com:7051
+      # - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org2.kiwi.com:7051
+      - CORE_PEER_LOCALMSPID=Org2MSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../channel/crypto-config/peerOrganizations/org2.kiwi.com/peers/peer0.org2.kiwi.com/:/etc/hyperledger/fabric/peer
+       # - peer0.org2.kiwi.com:/var/hyperledger/production
+    ports:
+      - 9051:7051
+      - 9053:7053
+
+  peer1.org2.kiwi.com:
+    container_name: peer1.org2.kiwi.com
+    extends:
+      file: peer-base.yaml
+      service: peer-base
+    environment:
+      - CORE_PEER_ID=peer1.org2.kiwi.com
+      - CORE_PEER_ADDRESS=peer1.org2.kiwi.com:7051
+      # - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org2.kiwi.com:7051
+      # - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org2.kiwi.com:7051
+      - CORE_PEER_LOCALMSPID=Org2MSP
+    volumes:
+        - /var/run/:/host/var/run/
+        - ../channel/crypto-config/peerOrganizations/org2.kiwi.com/peers/peer1.org2.kiwi.com/:/etc/hyperledger/fabric/peer
+        #- peer1.org2.kiwi.com:/var/hyperledger/production
+    ports:
+      - 10051:7051
+      - 10053:7053
