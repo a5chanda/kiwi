@@ -89,7 +89,7 @@ Navigate to the  directory that contains app.js and then start the node applicat
 ### Enrolling a user for Org1
 
 The following command registers and enrolls a user with the name `User` for an Organization, in this case Org1:
-`curl -s -X POST   http://localhost:4000/users   -H "content-type: application/x-www-form-urlencoded"   -d 'username=UserOrg1&orgName=Org1'`
+`curl -s -X POST   http://localhost:4000/users   -H "content-type: application/x-www-form-urlencoded" -d 'username=UserOrg1&orgName=Org1'`
 
 This should Output
 ```
@@ -97,7 +97,7 @@ This should Output
     "success":true,
     "secret":"",
     "message":"UserOrg1 enrolled Successfully",
-    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzA4MzY5MTEsInVzZXJuYW1lIjoiVXNlck9yZzEiLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTUzMDgwMDkxMX0.x5S4dSqEIGZLQKINpfz_UXvH2Un7_m1-J12zBGcMXZc"
+    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc3NDIwMDUsInVzZXJuYW1lIjoiVXNlck9yZzEiLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTUzNzcwNjAwNX0.j_VlemeawMG79sWiqmdTwLVizLlH9QdQwgsuXLd5OIA"
 }
 ```
 The token value will be unique and not the same as above.
@@ -115,7 +115,7 @@ This should Output
     "success":true,
     "secret":"",
     "message":"UserOrg2 enrolled Successfully",
-    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzA2NjMyMTEsInVzZXJuYW1lIjoiVXNlck9yZzEiLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTUzMDYyNzIxMX0.sHxWIvPPX8HP7X_T1KZzCJypp3_3qkND3xA_PP43yoE"
+    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc3NDA4MTcsInVzZXJuYW1lIjoiVXNlck9yZzIiLCJvcmdOYW1lIjoiT3JnMiIsImlhdCI6MTUzNzcwNDgxN30.KzdIhyNFaLh9lDMVVuceWI69jnMYmVbzVoXaG4qTwpE"
 }
 ```
 
@@ -125,7 +125,7 @@ This should Output
 ```
 curl -s -X POST \
   http://localhost:4000/channels \
-  -H "authorization: Bearer <Token Value For User in ORG1>" \
+  -H "authorization: Bearer " \
   -H "content-type: application/json" \
   -d '{
 	"channelName":"kiwi-channel",
@@ -137,7 +137,7 @@ curl -s -X POST \
 ```
 curl -s -X POST \
   http://localhost:4000/channels/kiwi-channel/peers \
-  -H "authorization: Bearer <Token Value For User in ORG1>" \
+  -H "authorization: Bearer " \
   -H "content-type: application/json" \
   -d '{
 	"peers": ["peer0.org1.kiwi.com","peer1.org1.kiwi.com"]
@@ -154,13 +154,15 @@ curl -s -X POST \
 	"peers": ["peer0.org2.kiwi.com","peer1.org2.kiwi.com"]
 }'
 ```
+
+
 ## Chaincode Interactions
 
 ### Install Chaincode on Org1 Peers
 ```
 curl -s -X POST \
   http://localhost:4000/chaincodes \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzA4MzcxNDMsInVzZXJuYW1lIjoiVXNlck9yZzEiLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTUzMDgwMTE0M30.yAWEyRolt38XOOfKM_h0Y7vDH1RoFYhKu_hjzlS5eYA" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc3NDIwMDUsInVzZXJuYW1lIjoiVXNlck9yZzEiLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTUzNzcwNjAwNX0.j_VlemeawMG79sWiqmdTwLVizLlH9QdQwgsuXLd5OIA" \
   -H "content-type: application/json" \
   -d '{
 	"peers": ["peer0.org1.kiwi.com","peer1.org1.kiwi.com"],
@@ -190,35 +192,58 @@ curl -s -X POST \
 ```
 curl -s -X POST \
   http://localhost:4000/channels/kiwi-channel/chaincodes \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzA4MzcxNDMsInVzZXJuYW1lIjoiVXNlck9yZzEiLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTUzMDgwMTE0M30.yAWEyRolt38XOOfKM_h0Y7vDH1RoFYhKu_hjzlS5eYA" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc3MzkyMDgsInVzZXJuYW1lIjoiVXNlck9yZzEiLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTUzNzcwMzIwOH0.CB1ji0ltD-xo4gB8DL59X3psmA2jrGKyQNhNByrCd-w" \
   -H "content-type: application/json" \
   -d '{
     "peers": ["peer0.org1.kiwi.com","peer1.org1.kiwi.com"],
+    "chaincodeName":"mycc",
+    "chaincodeVersion":"1.0",
+    "chaincodeType":"golang",
+    "args":["init", "a"]
+  }'
+
+curl -s -X POST \
+  http://localhost:4000/channels/kiwi-channel/chaincodes \
+  -H "authorization: Bearer " \
+  -H "content-type: application/json" \
+  -d '{
+  "peers": ["peer0.org1.kiwi.com","peer1.org1.kiwi.com"],
 	"chaincodeName":"mycc",
 	"chaincodeVersion":"1.0",
-    "chaincodeType":"golang",
+  "chaincodeType":"golang",
 	"args":["init", "a"]
-}'
+}'  
 ```
 
 ## Invoke Chaincode
 ```
 curl -s -X POST \
   http://localhost:4000/channels/kiwi-channel/chaincodes/mycc \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzA4MzcxNDMsInVzZXJuYW1lIjoiVXNlck9yZzEiLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTUzMDgwMTE0M30.yAWEyRolt38XOOfKM_h0Y7vDH1RoFYhKu_hjzlS5eYA" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc3Mzk4ODIsInVzZXJuYW1lIjoiVXNlck9yZzEiLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTUzNzcwMzg4Mn0.NugsaVt--jKlCE5NGo78NRatWlrwp0RsXDdS1TasYng" \
   -H "content-type: application/json" \
   -d '{
     "peers": ["peer0.org1.kiwi.com","peer1.org1.kiwi.com"],
-	"fcn":"",
-	"args":[]
+	"fcn":"addBusiness",
+	"args":["Apple","bus1234","["asd123","qew132"]","{}","1300000000000.00"]
+}'
+
+
+curl -s -X POST \
+  http://localhost:4000/channels/kiwi-channel/chaincodes/mycc \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc3NDIwMDUsInVzZXJuYW1lIjoiVXNlck9yZzEiLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTUzNzcwNjAwNX0.j_VlemeawMG79sWiqmdTwLVizLlH9QdQwgsuXLd5OIA" \
+  -H "content-type": "application/json" \
+  -d '{
+    "peers": ["peer0.org1.kiwi.com","peer1.org1.kiwi.com"],
+	"fcn":"addBusiness",
+	"args":["Apple","bus1234","[asd123,qew132]","{}","1300000000000.00"]
 }'
 ```
 
 ## Query Chaincode by Name
 
 curl -s -X GET \
-  "http://localhost:4000/channels/kiwi-channel/chaincodes/mycc?peer=peer0.org1.kiwi.com&fcn=query&args=%5B%2220870%22%5D" \
-  -H "authorization: Bearer <Bearer Token>" \
+  "http://localhost:4000/channels/kiwi-channel/chaincodes/mycc?peer=peer0.org1.kiwi.com&fcn=query&args=%5B%22asd%22%5D" \
+  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1Mzc3NDIwMDUsInVzZXJuYW1lIjoiVXNlck9yZzEiLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTUzNzcwNjAwNX0.j_VlemeawMG79sWiqmdTwLVizLlH9QdQwgsuXLd5OIA" \
   -H "content-type: application/json"
 
 ## Query Chaincode for List of businesses
@@ -242,3 +267,15 @@ curl -s -X GET \
   "http://localhost:4000/channels/kiwi-channel/chaincodes/mycc?peer=peer0.org1.kiwi.com&fcn=queryServicesList&args=%5B%2220870%22%5D" \
   -H "authorization: Bearer <Bearer Token>" \
   -H "content-type: application/json"
+
+  ## 
+
+  {
+   "selector": {
+      "docType": "Person"
+   },
+   "fields": [
+      "personName",
+      "netWorth"
+   ]
+}

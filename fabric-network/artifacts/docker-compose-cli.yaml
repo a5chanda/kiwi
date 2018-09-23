@@ -133,26 +133,26 @@ services:
     networks:
       - kiwiNet
 
-# ## Peer 1 -  Org 0
-#   peer0.org2.kiwi.com:
-#     container_name: peer0.org2.kiwi.com
-#     extends:
-#       file:  base/docker-compose-base.yaml
-#       service: peer0.org2.kiwi.com
-#     depends_on:
-#       - orderer.kiwi.com
-#     networks:
-#       - kiwiNet
+## Peer 1 -  Org 0
+  peer0.org2.kiwi.com:
+    container_name: peer0.org2.kiwi.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.org2.kiwi.com
+    depends_on:
+      - orderer.kiwi.com
+    networks:
+      - kiwiNet
 
-#   peer1.org2.kiwi.com:
-#     container_name: peer1.org2.kiwi.com
-#     extends:
-#       file:  base/docker-compose-base.yaml
-#       service: peer1.org2.kiwi.com
-#     depends_on:
-#       - orderer.kiwi.com
-#     networks:
-#       - kiwiNet
+  peer1.org2.kiwi.com:
+    container_name: peer1.org2.kiwi.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer1.org2.kiwi.com
+    depends_on:
+      - orderer.kiwi.com
+    networks:
+      - kiwiNet
 
   cli:
     container_name: cli

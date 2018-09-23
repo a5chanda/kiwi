@@ -53,7 +53,7 @@ type Business struct{ // Business STRUCTURE
 type Person struct{ // Person STRUCTURE
 	ObjectType					string			`json:"docType"`
 	Name    					string			`json:"personName"`	
-    PersonID			 	 	string			`json:"businessID"`
+    PersonID			 	 	string			`json:"personID"`
 	CompanyName	 				string			`json:"companyName"`
 	NetWorth					float64			`json:"netWorth"`
 	AssetsInventory 			[]int			`json:"assetsInventory"`
@@ -499,14 +499,24 @@ func (s *SmartContract) queryServicesList(stub shim.ChaincodeStubInterface, args
 
 // func (s *SmartContract) sellService(stub shim.ChaincodeStubInterface, args []string){ //args[0] => buyerID, args[2]=serviceID
 // 	var buyerID = args[0]
-// 	var sellerID = args[1]
+// 	var serviceID = args[1]
 	
 // 	var service Service
 // 	var buyer Person
+
+// 	service, err = get_service(stub, serviceID)
+//  	if err != nil{
+// 		return shim.Error("Error getting service ")
+// 	}
+
+// 	buyer, err = get_person(stub, buyerID)
+// 	if err != nil{
+// 		return shim.Error("Error getting Buyer")
+// 	}
+
+
+
 	
-
-
-
 
 	
 // }

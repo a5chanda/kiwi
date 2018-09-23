@@ -19,7 +19,7 @@ x-type: "hlfv1"
 #
 # Describe what the target network is/does.
 #
-description: "IQ-Hyperledger Network for Kiwi"
+description: "Hyperledger Network for Kiwi"
 
 #
 # Schema version of the content. Used by the SDK to apply the corresponding parsing rules.
@@ -154,7 +154,7 @@ orderers:
     # they will be passed in as-is to gRPC client constructor
     grpcOptions:
       ssl-target-name-override: orderer.kiwi.com
-      grpc-max-send-message-length: 15
+      # grpc-max-send-message-length: 15
 
     tlsCACerts:
       path: ./artifacts/channel/crypto-config/ordererOrganizations/kiwi.com/orderers/orderer.kiwi.com/tls/ca.crt
