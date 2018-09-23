@@ -214,22 +214,31 @@ curl -s -X POST \
 }'
 ```
 
-## Query Chaincode
+## Query Chaincode by Name
 
 curl -s -X GET \
   "http://localhost:4000/channels/kiwi-channel/chaincodes/mycc?peer=peer0.org1.kiwi.com&fcn=query&args=%5B%2220870%22%5D" \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzA4MzcxNDMsInVzZXJuYW1lIjoiVXNlck9yZzEiLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTUzMDgwMTE0M30.yAWEyRolt38XOOfKM_h0Y7vDH1RoFYhKu_hjzlS5eYA" \
+  -H "authorization: Bearer <Bearer Token>" \
+  -H "content-type: application/json"
+
+## Query Chaincode for List of businesses
+
+curl -s -X GET \
+  "http://localhost:4000/channels/kiwi-channel/chaincodes/mycc?peer=peer0.org1.kiwi.com&fcn=queryBusinessesList&args=%5B%2220870%22%5D" \
+  -H "authorization: Bearer <Bearer Token>" \
+  -H "content-type: application/json"
+
+## Query Chaincode for List of People
+
+curl -s -X GET \
+  "http://localhost:4000/channels/kiwi-channel/chaincodes/mycc?peer=peer0.org1.kiwi.com&fcn=queryPersonsList&args=%5B%2220870%22%5D" \
+  -H "authorization: Bearer <Bearer Token>" \
   -H "content-type: application/json"
 
 
-## Query Chaincode and have record of who accessed it
+## Query Chaincode for List of Services
 
-curl -s -X POST \
-  http://localhost:4000/channels/kiwi-channel/chaincodes/mycc \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzA1NzkyMDksInVzZXJuYW1lIjoiVXNlck9yZzEiLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTUzMDU0MzIwOX0.lUYCSkW6K3fZKBUGWGNl_GVoisujU6TEKoHyaNow-0o" \
-  -H "content-type: application/json" \
-  -d '{
-    "peers": ["peer0.org1.kiwi.com","peer1.org1.kiwi.com"],
-	"fcn":"query",
-	"args":[""]
-}'
+curl -s -X GET \
+  "http://localhost:4000/channels/kiwi-channel/chaincodes/mycc?peer=peer0.org1.kiwi.com&fcn=queryServicesList&args=%5B%2220870%22%5D" \
+  -H "authorization: Bearer <Bearer Token>" \
+  -H "content-type: application/json"
