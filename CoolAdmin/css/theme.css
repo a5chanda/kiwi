@@ -4,7 +4,7 @@
 Project:  CoolAdmin
 Version:	1.0
 Last change:	08/10/2018 [Add Define a table of contents Link]
-Assigned to:	Hau Nguyen
+Assigned to:	Team Kiwi
 Primary use:	Open Source
 -------------------------------------------------------------------*/
 /*------------------------------------------------------------------
@@ -1178,7 +1178,7 @@ section {
 
 /* ----- Header ----- */
 .header-desktop {
-    background: #FAE029;
+    background: #fffdf2;
     /*-webkit-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.1);
     box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.1);*/
@@ -1582,7 +1582,7 @@ section {
 }
 
 .menu-sidebar .logo {
-    background: #FAE029;
+    background: #fffdf2;
     height: 75px;
     padding: 0 35px;
     display: -webkit-box;
