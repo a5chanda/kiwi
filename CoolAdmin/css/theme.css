@@ -162,7 +162,7 @@ strong {
 
 .title-1 {
     text-transform: capitalize;
-    font-weight: 400;
+    font-weight: 600;
     font-size: 30px;
 }
 
@@ -171,6 +171,7 @@ strong {
     font-weight: 400;
     font-size: 24px;
     line-height: 1;
+    text-align: center;
 }
 
 .title-3 {
@@ -479,6 +480,7 @@ section {
 
 .au-btn--blue {
     background: #28a745;
+    padding: 0px 43px;
 }
 
 .au-btn--green {
@@ -14645,4 +14647,51 @@ section {
 
 .vue-lists ul, .vue-lists ol {
     padding-left: 30px;
+}
+
+.t1{
+    margin: 20px 20px;
+}
+
+.t2{
+    text-transform: capitalize;
+    font-weight: 500;
+    font-size: 25px;
+    margin:30px 20px;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #28a745;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #085305;
+}
+
+.bbt{
+    margin-left: 35%;
+    margin-top: 20px;
+}
+
+.book{
+    margin-left:28%;
+}
+
+.Speaker{
+    margin-left:5%;
+}
+
+.card-container{
+    width:450px;
+    height:580px;
+}
+
+._bk{
+    margin-top:130px;
+}
+
+._sp{
+    margin-top: 100px;
 }
