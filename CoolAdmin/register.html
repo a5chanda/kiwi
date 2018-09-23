@@ -50,13 +50,22 @@
                         <div class="login-form">
                             <form action="" method="post">
                                 <div class="form-group">
-                                    <label>Username</label>
-                                    <input class="au-input au-input--full" type="text" name="username" placeholder="Username">
+                                    <label>Business Name</label>
+                                    <input id="username" class="au-input au-input--full" type="text" name="username" placeholder="Username">
+                                </div>
+                                <div class="form-group">
+                                        <label>Total Equity</label>
+                                        <input id="equity" class="au-input au-input--full" type="text" name="username" placeholder="Username">
                                 </div>
                                 <div class="form-group">
                                     <label>Password</label>
                                     <input class="au-input au-input--full" type="password" name="password" placeholder="Password">
                                 </div>
+                                <p>Are you a person or a business?</p>
+                                <select id="accountType">
+                                    <option value="Person">Person</option>
+                                    <option value="Business">Business</option>
+                                </select>
                                 <div class="login-checkbox">
                                     <label>
                                         <input type="checkbox" name="aggree">Agree the terms and policy
@@ -100,6 +109,7 @@
     </script>
 
     <!-- Main JS-->
+    <script src="js/uuid.js"></script>
     <script src="js/main.js"></script>
     <script src="js/register.js"></script>
 
