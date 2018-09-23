@@ -1,4 +1,4 @@
 $('#login').click((e) => {
     e.preventDefault();
-    window.open('index.html?username='+ $('#username').val(), "_self");
+    window.open('profile.html?username='+ $('#username').val(), "_self");
 });

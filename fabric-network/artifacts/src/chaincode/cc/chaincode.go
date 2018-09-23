@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"encoding/json"
 	"strconv"
+	"errors"
 	//"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
@@ -102,13 +103,16 @@ func (s *SmartContract) Invoke(stub shim.ChaincodeStubInterface) sc.Response {
 		return s.addBusiness(stub, args)	
 	} else if fn =="addPerson"{
 		return s.addPerson(stub, args)	
-	}//else if fn == "queryService" { 
-	// 	return s.(stub, args)
-	// } else if fn == "queryBusiness" { 
-	// 	return s.get(stub, args)
-	// } else if fn == "queryPerson" { 
-	// 	return s.getQuoteHistory(stub, args)
-	// } 
+	} else if fn == "query"{ // Query by name
+		return s.query(stub, args)
+	} else if fn == "queryPersonsList"{ 
+		return s.queryPersonsList(stub, args)
+	} else if fn == "queryServicesList" { 
+		return s.queryServicesList(stub, args)
+	} else if fn == "queryBusinessesList" { 
+		return s.queryBusinessesList(stub, args)
+	} 
+
 
 	// Return the result as success payload
 	fmt.Println("Receieved unknown invoke function name - '" + fn + "'")
@@ -119,7 +123,7 @@ func (s *SmartContract) Invoke(stub shim.ChaincodeStubInterface) sc.Response {
 
 
 
-//**********************************************FUNCTIONS*************************************//
+//********************************************** INITIALIZER FUNCTIONS*************************************//
 func stringToIntArr(args string) []int{
 	str := args
     var ints []int
@@ -168,7 +172,7 @@ func (s *SmartContract) addPerson(stub shim.ChaincodeStubInterface, args []strin
 	personAsBytes, err := json.Marshal(person)
 
 	// Save quote to state with ID
-	err = stub.PutState(args[1], personAsBytes)
+	err = stub.PutState(args[0], personAsBytes) //storing by name
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -182,7 +186,7 @@ func (s *SmartContract) addPerson(stub shim.ChaincodeStubInterface, args []strin
 	var pList PersonsList
 	json.Unmarshal(personsListAsBytes, &pList)
 
-	pList.List = append([]string{args[1]}, pList.List...)
+	pList.List = append([]string{args[0]}, pList.List...)
 	fmt.Println("! appended quote to personslist")
 
 	pListAsBytes, _ := json.Marshal(pList)
@@ -241,7 +245,7 @@ func (s *SmartContract) addBusiness(stub shim.ChaincodeStubInterface, args []str
 	businessAsBytes, err := json.Marshal(business)
 
 	// Save quote to state
-	err = stub.PutState(args[1], businessAsBytes)
+	err = stub.PutState(args[0], businessAsBytes)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -255,7 +259,7 @@ func (s *SmartContract) addBusiness(stub shim.ChaincodeStubInterface, args []str
 	var bList BusinessesList
 	json.Unmarshal(businessesListAsBytes, &bList)
 
-	bList.List = append([]string{args[1]}, bList.List...)
+	bList.List = append([]string{args[0]}, bList.List...)
 	fmt.Println("! appended quote to businesseslist")
 
 	bListAsBytes, _ := json.Marshal(bList)
@@ -321,7 +325,7 @@ func (s *SmartContract) addService(stub shim.ChaincodeStubInterface, args []stri
 	serviceAsBytes, err := json.Marshal(service)
 
 	// Save service to state
-	err = stub.PutState(args[1], serviceAsBytes)
+	err = stub.PutState(args[0], serviceAsBytes)
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -335,7 +339,7 @@ func (s *SmartContract) addService(stub shim.ChaincodeStubInterface, args []stri
 	var sList ServicesList
 	json.Unmarshal(servicesListAsBytes, &sList)
 
-	sList.List = append([]string{args[1]}, sList.List...)
+	sList.List = append([]string{args[0]}, sList.List...)
 	fmt.Println("! appended service ID to serviceslist")
 
 	sListAsBytes, _ := json.Marshal(sList)
@@ -348,3 +352,161 @@ func (s *SmartContract) addService(stub shim.ChaincodeStubInterface, args []stri
 	fmt.Println("- end init service")
 	return shim.Success(nil)
 }
+
+
+// ********************GETTER FUNCTIONS*******************/
+
+// ============================================================================================================================
+// Get Person - get the person asset from ledger
+// ============================================================================================================================
+func get_person(stub shim.ChaincodeStubInterface, personID string) (Person, error) {
+	var person Person
+	personAsBytes, err := stub.GetState(personID)//getState retreives a key/value from the ledger
+
+	if err != nil {                                            //this seems to always succeed, even if key didn't exist
+		return person, errors.New("Failed to get person - " + personID)
+	}
+	json.Unmarshal(personAsBytes, &person)                       //un stringify it aka JSON.parse()
+
+	if len(person.PersonID) == 0 {                              //test if owner is actually here or just nil
+		return person, errors.New("person does not exist - " + personID + ", '" + person.Name)
+	}
+	
+	return person, nil
+}
+
+// ============================================================================================================================
+// Get Service - get the service asset from ledger
+// ============================================================================================================================
+func get_service(stub shim.ChaincodeStubInterface, serviceID string) (Service, error) {
+	var service Service
+	serviceAsBytes, err := stub.GetState(serviceID)                     //getState retreives a key/value from the ledger
+	if err != nil {                                            //this seems to always succeed, even if key didn't exist
+		return service, errors.New("Failed to get service - " + serviceID)
+	}
+	json.Unmarshal(serviceAsBytes, &service)                       //un stringify it aka JSON.parse()
+
+	if len(service.ServiceID) == 0 {                              //test if owner is actually here or just nil
+		return service, errors.New("Service does not exist - " + serviceID + ", '" + service.ServiceName)
+	}
+	
+	return service, nil
+}
+
+
+// ============================================================================================================================
+// Get Business - get the business asset from ledger
+// ============================================================================================================================
+func get_business(stub shim.ChaincodeStubInterface, businessID string) (Business, error) {
+	var business Business
+	businessAsBytes, err := stub.GetState(businessID)                     //getState retreives a key/value from the ledger
+	if err != nil {                                            //this seems to always succeed, even if key didn't exist
+		return business, errors.New("Failed to get business - " + businessID)
+	}
+	json.Unmarshal(businessAsBytes, &business)                       //un stringify it aka JSON.parse()
+
+	if len(business.BusinessID) == 0 {                              //test if owner is actually here or just nil
+		return business, errors.New("Business does not exist - " + businessID + ", '" + business.BusinessName)
+	}
+	
+	return business, nil
+}
+
+
+//********************* QUERIES ********************//
+
+func (s *SmartContract) query(stub shim.ChaincodeStubInterface, args []string) sc.Response{
+	fmt.Println("============================Beginning Query================================")
+
+	if len(args) != 1{
+		return shim.Error("Incorrect number of arguments. Expecting Person ID, Business ID or Service ID")
+	}
+
+	var id string
+	var err error
+
+	//var person Person
+	id = args[0]
+	queryAsBytes, err := stub.GetState(id)
+	
+	if err != nil{
+		return shim.Error("json error")
+	}
+
+	//json.Unmarshal(personBytes, &person)
+	return shim.Success(queryAsBytes)
+}
+
+func (s *SmartContract) queryBusinessesList(stub shim.ChaincodeStubInterface, args []string) sc.Response{
+	fmt.Println("============================Beginning Businesses List Query================================")
+
+	if len(args) != 1{
+		return shim.Error("Incorrect number of arguments. Expecting empty string")
+	}
+
+	var err error
+
+	//var person Person
+	businessList, err := stub.GetState(BusinessesListStr)
+	
+	if err != nil{
+		return shim.Error("json error")
+	}
+
+	//json.Unmarshal(personBytes, &person)
+	return shim.Success(businessList)
+}
+
+func (s *SmartContract) queryPersonsList(stub shim.ChaincodeStubInterface, args []string) sc.Response{
+	fmt.Println("============================Beginning Persons List Query================================")
+
+	if len(args) != 1{
+		return shim.Error("Incorrect number of arguments. Expecting empty string")
+	}
+
+	var err error
+
+	list, err := stub.GetState(PersonsListStr)
+	
+	if err != nil{
+		return shim.Error("json error")
+	}
+
+	return shim.Success(list)
+}
+
+func (s *SmartContract) queryServicesList(stub shim.ChaincodeStubInterface, args []string) sc.Response{
+	fmt.Println("============================Beginning Services List Query================================")
+
+	if len(args) != 1{
+		return shim.Error("Incorrect number of arguments. Expecting empty string")
+	}
+
+	var err error
+
+	list, err := stub.GetState(ServicesListStr)
+	
+	if err != nil{
+		return shim.Error("json error")
+	}
+
+	return shim.Success(list)
+}
+
+
+
+//********************************************** INITIALIZER FUNCTIONS*************************************//
+
+// func (s *SmartContract) sellService(stub shim.ChaincodeStubInterface, args []string){ //args[0] => buyerID, args[2]=serviceID
+// 	var buyerID = args[0]
+// 	var sellerID = args[1]
+	
+// 	var service Service
+// 	var buyer Person
+	
+
+
+
+
+	
+// }

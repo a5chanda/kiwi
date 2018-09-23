@@ -59,9 +59,14 @@ Go back to the CLI container terminal window
 
     This command will instantiate the chaincode to the channel so that it can be accesible by other peers
 
-3. Invoke Chaincode (test if a quote is being added)
-`peer chaincode invoke -o orderer.kiwi.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/kiwi.com/orderers/orderer.kiwi.com/msp/tlscacerts/tlsca.kiwi.com-cert.pem -C kiwi-channel -n mycc  -c '{"Args":["addPerson","Bob","asd123","Apple","12343.13"]}'`
+3. Invoke Chaincode (test if a person can be added)
+`peer chaincode invoke -o orderer.kiwi.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/kiwi.com/orderers/orderer.kiwi.com/msp/tlscacerts/tlsca.kiwi.com-cert.pem -C kiwi-channel -n mycc3  -c '{"Args":["addPerson","Bob","asd123","Apple","12343.13","[1,3]"]}'`
 
+4. Test business 
+`peer chaincode invoke -o orderer.kiwi.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/kiwi.com/orderers/orderer.kiwi.com/msp/tlscacerts/tlsca.kiwi.com-cert.pem -C kiwi-channel -n mycc3  -c '{"Args":["addBusiness","Apple","bus1234","[asd123,qew132]","{}","1300000000000.00"]}'`
+
+5. Query for person
+`peer chaincode query -o orderer.kiwi.com:7050 -C kiwi-channel -n mycc  -c '{"Args":["queryPerson","asd123"]}'`
 
 
 
@@ -209,22 +214,31 @@ curl -s -X POST \
 }'
 ```
 
-## Query Chaincode
+## Query Chaincode by Name
 
 curl -s -X GET \
   "http://localhost:4000/channels/kiwi-channel/chaincodes/mycc?peer=peer0.org1.kiwi.com&fcn=query&args=%5B%2220870%22%5D" \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzA4MzcxNDMsInVzZXJuYW1lIjoiVXNlck9yZzEiLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTUzMDgwMTE0M30.yAWEyRolt38XOOfKM_h0Y7vDH1RoFYhKu_hjzlS5eYA" \
+  -H "authorization: Bearer <Bearer Token>" \
+  -H "content-type: application/json"
+
+## Query Chaincode for List of businesses
+
+curl -s -X GET \
+  "http://localhost:4000/channels/kiwi-channel/chaincodes/mycc?peer=peer0.org1.kiwi.com&fcn=queryBusinessesList&args=%5B%2220870%22%5D" \
+  -H "authorization: Bearer <Bearer Token>" \
+  -H "content-type: application/json"
+
+## Query Chaincode for List of People
+
+curl -s -X GET \
+  "http://localhost:4000/channels/kiwi-channel/chaincodes/mycc?peer=peer0.org1.kiwi.com&fcn=queryPersonsList&args=%5B%2220870%22%5D" \
+  -H "authorization: Bearer <Bearer Token>" \
   -H "content-type: application/json"
 
 
-## Query Chaincode and have record of who accessed it
+## Query Chaincode for List of Services
 
-curl -s -X POST \
-  http://localhost:4000/channels/kiwi-channel/chaincodes/mycc \
-  -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MzA1NzkyMDksInVzZXJuYW1lIjoiVXNlck9yZzEiLCJvcmdOYW1lIjoiT3JnMSIsImlhdCI6MTUzMDU0MzIwOX0.lUYCSkW6K3fZKBUGWGNl_GVoisujU6TEKoHyaNow-0o" \
-  -H "content-type: application/json" \
-  -d '{
-    "peers": ["peer0.org1.kiwi.com","peer1.org1.kiwi.com"],
-	"fcn":"query",
-	"args":[""]
-}'
+curl -s -X GET \
+  "http://localhost:4000/channels/kiwi-channel/chaincodes/mycc?peer=peer0.org1.kiwi.com&fcn=queryServicesList&args=%5B%2220870%22%5D" \
+  -H "authorization: Bearer <Bearer Token>" \
+  -H "content-type: application/json"
