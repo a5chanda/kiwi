@@ -48,6 +48,24 @@
 
 
 
+## Terminal 2: CLI container 
+Go back to the CLI container terminal window
+
+1. Install Chaincode
+`peer chaincode install -n mycc -v 1.0 -p github.com/hyperledger/fabric/peer/chaincode/cc`
+
+2. Instantiate chaincode
+`peer chaincode instantiate --tls -o orderer.kiwi.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/kiwi.com/orderers/orderer.kiwi.com/msp/tlscacerts/tlsca.kiwi.com-cert.pem -C kiwi-channel -n mycc -v 1.0 -c '{"Args":["init","1"]}' -P "AND ('Org1MSP.peer')"`
+
+    This command will instantiate the chaincode to the channel so that it can be accesible by other peers
+
+3. Invoke Chaincode (test if a quote is being added)
+`peer chaincode invoke -o orderer.kiwi.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/kiwi.com/orderers/orderer.kiwi.com/msp/tlscacerts/tlsca.kiwi.com-cert.pem -C kiwi-channel -n mycc  -c '{"Args":["addPerson","Bob","asd123","Apple","12343.13"]}'`
+
+
+
+
+
 
 # Testing the Node SDK and interacting with the network
 
