@@ -19,21 +19,21 @@ type SmartContract struct {
 }
 
 // Peoples IDs List
-var PersonsListStr = "personsList"
+var PersonsListStr = "personList"
 
 type PersonsList struct{ // Stores the list of quote IDs
 	List []string `json:"personsList"`
 }
 
 // Businesses ID List
-var BusinessesListStr = "businessesList"
+var BusinessesListStr = "businessList"
 
 type BusinessesList struct{ // Stores the list of Businesses IDs
 	List []string `json:"businessesList"`
 }
 
 // Services ID List
-var ServicesListStr = "servicesList"
+var ServicesListStr = "serviceList"
 
 type ServicesList struct{ // Stores the list of Businesses IDs
 	List []string `json:"servicesList"`
@@ -55,7 +55,7 @@ type Person struct{ // Person STRUCTURE
     PersonID			 	 	string			`json:"businessID"`
 	CompanyName	 				string			`json:"companyName"`
 	NetWorth					float64			`json:"netWorth"`
-	//AssetsInventory 			[]int			`json:"assetsInventory"`
+	AssetsInventory 			[]int			`json:"assetsInventory"`
 }
 
 type Service struct{
@@ -101,7 +101,7 @@ func (s *SmartContract) Invoke(stub shim.ChaincodeStubInterface) sc.Response {
 	} else if fn =="addBusiness"{
 		return s.addBusiness(stub, args)	
 	} else if fn =="addPerson"{
-		return s.addBusiness(stub, args)	
+		return s.addPerson(stub, args)	
 	}//else if fn == "queryService" { 
 	// 	return s.(stub, args)
 	// } else if fn == "queryBusiness" { 
@@ -157,7 +157,7 @@ func (s *SmartContract) addPerson(stub shim.ChaincodeStubInterface, args []strin
 	  	PersonID: args[1],
 		CompanyName: args[2],
 		NetWorth: netWorth,
-		//AssetsInventory: stringToIntArr(args[4]),	
+		AssetsInventory: stringToIntArr(args[4]),	
 	}
 
 	fmt.Println("Person being added: ")
@@ -196,6 +196,8 @@ func (s *SmartContract) addPerson(stub shim.ChaincodeStubInterface, args []strin
 }
 
 func (s *SmartContract) addBusiness(stub shim.ChaincodeStubInterface, args []string) sc.Response{
+
+	///********//////	
 	var err error
 
 	// ObjectType					string			`json:"docType"`
@@ -212,12 +214,12 @@ func (s *SmartContract) addBusiness(stub shim.ChaincodeStubInterface, args []str
 	fmt.Println(args[2]) // Employees
 	fmt.Println(args[3]) //Inventory
 						// networth
-//*********************************Error Handling*****************************************//
+	//*********************************Error Handling*****************************************//
 	netWorth, err := strconv.ParseFloat(args[4], 64)
 	if err != nil{
 		return shim.Error("3rd argument 'NetWorth' must be a numeric string")
 	}
-//*****************************************************************************************//
+
 
 	var inventory = make(map[string]int)
 	inventory["init"] = -1
