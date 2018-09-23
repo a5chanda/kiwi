@@ -59,9 +59,14 @@ Go back to the CLI container terminal window
 
     This command will instantiate the chaincode to the channel so that it can be accesible by other peers
 
-3. Invoke Chaincode (test if a quote is being added)
-`peer chaincode invoke -o orderer.kiwi.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/kiwi.com/orderers/orderer.kiwi.com/msp/tlscacerts/tlsca.kiwi.com-cert.pem -C kiwi-channel -n mycc  -c '{"Args":["addPerson","Bob","asd123","Apple","12343.13"]}'`
+3. Invoke Chaincode (test if a person can be added)
+`peer chaincode invoke -o orderer.kiwi.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/kiwi.com/orderers/orderer.kiwi.com/msp/tlscacerts/tlsca.kiwi.com-cert.pem -C kiwi-channel -n mycc3  -c '{"Args":["addPerson","Bob","asd123","Apple","12343.13","[1,3]"]}'`
 
+4. Test business 
+`peer chaincode invoke -o orderer.kiwi.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/kiwi.com/orderers/orderer.kiwi.com/msp/tlscacerts/tlsca.kiwi.com-cert.pem -C kiwi-channel -n mycc3  -c '{"Args":["addBusiness","Apple","bus1234","[asd123,qew132]","{}","1300000000000.00"]}'`
+
+5. Query for person
+`peer chaincode query -o orderer.kiwi.com:7050 -C kiwi-channel -n mycc  -c '{"Args":["queryPerson","asd123"]}'`
 
 
 
