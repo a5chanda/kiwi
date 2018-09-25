@@ -7,3 +7,9 @@ Kiwi is a customer relationship and asset management platform targeted for small
 
 Additionally, the customer facing side enables consumers to conduct peer to peer transactions in the efforts to shift to a cashless economy. Regular customers have the ability to apply to job postings, purchase services offerred by current businesses, and the ability to start their own business as well.
 
+![My image](https://github.com/a5chanda/kiwi/blob/master/Images/login.png
+![My image](https://github.com/a5chanda/kiwi/blob/master/Images/dashboard.png
+![My image](https://github.com/a5chanda/kiwi/blob/master/Images/products.png
+![My image](https://github.com/a5chanda/kiwi/blob/master/Images/transactions.png
+![My image](https://github.com/a5chanda/kiwi/blob/master/Images/jobs.png
+![My image](https://github.com/a5chanda/kiwi/blob/master/Images/employees.png
